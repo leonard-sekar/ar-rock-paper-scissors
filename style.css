@@ -1,0 +1,45 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0b0b;
+  color: #fff;
+  text-align: center;
+}
+
+h1 {
+  margin: 10px 0;
+}
+
+#camera-ui {
+  margin-bottom: 10px;
+}
+
+select {
+  padding: 6px;
+  border-radius: 6px;
+}
+
+#container {
+  position: relative;
+  width: 360px;
+  margin: auto;
+}
+
+video, canvas {
+  width: 360px;
+  height: 270px;
+  border-radius: 12px;
+}
+
+#ui, #status, #scoreboard {
+  margin-top: 10px;
+}
+
+button {
+  margin-top: 12px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}

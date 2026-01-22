@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AR Rock Paper Scissors (Web)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<h1>Rock Paper Scissors (Camera AR)</h1>
+<button id="fullscreenBtn">Enter Fullscreen AR</button>
+
+<div id="camera-ui">
+  <label>Camera:</label>
+  <select id="cameraSelect"></select>
+</div>
+
+<div id="container">
+  <video id="video" autoplay playsinline></video>
+</div>
+
+<div id="ui">
+  <p>Detected: <span id="detected">-</span></p>
+  <p>Countdown: <span id="countdown">-</span></p>
+  <h2 id="result">-</h2>
+</div>
+
+<div id="status">
+  <p>Your Move: <span id="yourMove">-</span></p>
+  <p>Computer Move: <span id="computerMove">-</span></p>
+</div>
+
+<div id="scoreboard">
+  <h3>Score</h3>
+  <p>You: <span id="playerScore">0</span></p>
+  <p>Computer: <span id="computerScore">0</span></p>
+</div>
+
+<button id="restartBtn">Restart Game</button>
+
+<div>
+  <input id="peerIdInput" placeholder="Friend ID">
+  <button onclick="connectToPeer(peerIdInput.value)">Connect</button>
+</div>
+
+
+<!-- MediaPipe -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>
