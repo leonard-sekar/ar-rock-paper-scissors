@@ -204,3 +204,45 @@ document.getElementById("fullscreenBtn").onclick = () => {
 };
 
 initCameraSelector();
+
+/* ---------------- MULTIPLAYER (WEBRTC via PeerJS) ---------------- */
+
+let peer = new Peer();
+let conn = null;
+
+peer.on("open", id => {
+  console.log("Your Multiplayer ID:", id);
+  alert("Your Multiplayer ID:\n" + id + "\nShare this with your friend");
+});
+
+peer.on("connection", connection => {
+  conn = connection;
+  setupConnection();
+});
+
+function connectToPeer(peerId) {
+  conn = peer.connect(peerId);
+  setupConnection();
+}
+
+function setupConnection() {
+  conn.on("data", data => {
+    if (data.type === "gesture") {
+      document.getElementById("computerMove").innerText = data.gesture;
+    }
+    if (data.type === "score") {
+      document.getElementById("computerScore").innerText = data.score;
+    }
+  });
+}
+
+/* send gesture after lock */
+const originalLockMove = lockMove;
+lockMove = function (gesture) {
+  originalLockMove(gesture);
+
+  if (conn?.open) {
+    conn.send({ type: "gesture", gesture });
+    conn.send({ type: "score", score: playerScore });
+  }
+};

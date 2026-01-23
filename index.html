@@ -39,10 +39,16 @@
 
 <button id="restartBtn">Restart Game</button>
 <button id="fullscreenBtn">Fullscreen AR</button>
+<div>
+  <input id="peerIdInput" placeholder="Friend ID">
+  <button onclick="connectToPeer(peerIdInput.value)">Connect</button>
+</div>
+
 
 <!-- MediaPipe -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
 <script src="script.js"></script>
 </body>
