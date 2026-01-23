@@ -25,10 +25,11 @@ select {
   margin: auto;
 }
 
-video, canvas {
+video {
   width: 360px;
   height: 270px;
   border-radius: 12px;
+  background: black;
 }
 
 #ui, #status, #scoreboard {
@@ -36,10 +37,14 @@ video, canvas {
 }
 
 button {
-  margin-top: 12px;
+  margin: 8px;
   padding: 10px 20px;
   border-radius: 8px;
   border: none;
   font-size: 16px;
   cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.85;
 }

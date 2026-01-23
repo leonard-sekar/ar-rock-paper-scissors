@@ -10,6 +10,7 @@ const videoElement = document.getElementById("video");
 const detectedEl = document.getElementById("detected");
 const cameraSelect = document.getElementById("cameraSelect");
 const resultEl = document.getElementById("result");
+const confidenceEl = document.getElementById("confidence");
 
 const sounds = {
   countdown: new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"),
@@ -20,8 +21,7 @@ const sounds = {
 
 let activeCamera = null;
 
-/* ---------------- GESTURE LOGIC (UNCHANGED) ---------------- */
-
+/* ---------- GESTURE LOGIC (UNCHANGED) ---------- */
 function getGesture(landmarks) {
   if (!landmarks || landmarks.length < 21) return "-";
 
@@ -41,12 +41,11 @@ function getGesture(landmarks) {
   return "-";
 }
 
-/* ---------------- GAME LOGIC ---------------- */
-
+/* ---------- GAME LOGIC ---------- */
 function startCountdown(gesture) {
   if (countdownTimer || gameLocked) return;
 
-  let count = 3;
+  let count = 1;
   document.getElementById("countdown").innerText = count;
 
   countdownTimer = setInterval(() => {
@@ -72,7 +71,6 @@ function lockMove(playerMove) {
   document.getElementById("computerMove").innerText = computerMove;
 
   determineWinner(playerMove, computerMove);
-
   setTimeout(resetRound, 3000);
 }
 
@@ -114,8 +112,7 @@ function resetRound() {
   resultEl.innerText = "-";
 }
 
-/* ---------------- MEDIAPIPE ---------------- */
-
+/* ---------- MEDIAPIPE ---------- */
 const hands = new Hands({
   locateFile: (file) =>
     `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
@@ -133,8 +130,12 @@ hands.onResults((results) => {
     detectedEl.innerText = "-";
     stableFrames = 0;
     stableGesture = null;
+    confidenceEl.innerText = "0%";
     return;
   }
+
+  confidenceEl.innerText =
+    Math.round(results.multiHandedness[0].score * 100) + "%";
 
   const gesture = getGesture(results.multiHandLandmarks[0]);
   detectedEl.innerText = gesture;
@@ -147,11 +148,10 @@ hands.onResults((results) => {
     stableFrames = 0;
   }
 
-  if (stableFrames === 30) startCountdown(gesture);
+  if (stableFrames === 20) startCountdown(gesture);
 });
 
-/* ---------------- CAMERA HANDLING ---------------- */
-
+/* ---------- CAMERA ---------- */
 async function getCameras() {
   const devices = await navigator.mediaDevices.enumerateDevices();
   return devices.filter(d => d.kind === "videoinput");
@@ -183,7 +183,6 @@ async function initCameraSelector() {
     cameraSelect.appendChild(opt);
   });
 
-  cameraSelect.value = cams[0].deviceId;
   startCamera(cams[0].deviceId);
 }
 
@@ -191,71 +190,17 @@ cameraSelect.addEventListener("change", () => {
   startCamera(cameraSelect.value);
 });
 
-/* ---------------- RESTART BUTTON ---------------- */
-
-document.getElementById("restartBtn").addEventListener("click", () => {
+/* ---------- UI ---------- */
+document.getElementById("restartBtn").onclick = () => {
   playerScore = 0;
   computerScore = 0;
   document.getElementById("playerScore").innerText = 0;
   document.getElementById("computerScore").innerText = 0;
   resetRound();
-});
-
-initCameraSelector();
-
-/* ---------------- FULLSCREEN AR (ADD-ONLY) ---------------- */
-
-document.getElementById("fullscreenBtn").addEventListener("click", () => {
-  const el = document.documentElement;
-
-  if (!document.fullscreenElement) {
-    el.requestFullscreen?.() ||
-    el.webkitRequestFullscreen?.() ||
-    el.msRequestFullscreen?.();
-  } else {
-    document.exitFullscreen?.();
-  }
-});
-
-/* ---------------- MULTIPLAYER (WEBRTC via PeerJS) ---------------- */
-
-let peer = new Peer();
-let conn = null;
-
-peer.on("open", id => {
-  console.log("Your Multiplayer ID:", id);
-  alert("Your Multiplayer ID:\n" + id + "\nShare this with your friend");
-});
-
-peer.on("connection", connection => {
-  conn = connection;
-  setupConnection();
-});
-
-function connectToPeer(peerId) {
-  conn = peer.connect(peerId);
-  setupConnection();
-}
-
-function setupConnection() {
-  conn.on("data", data => {
-    if (data.type === "gesture") {
-      document.getElementById("computerMove").innerText = data.gesture;
-    }
-    if (data.type === "score") {
-      document.getElementById("computerScore").innerText = data.score;
-    }
-  });
-}
-
-/* send gesture after lock */
-const originalLockMove = lockMove;
-lockMove = function (gesture) {
-  originalLockMove(gesture);
-
-  if (conn?.open) {
-    conn.send({ type: "gesture", gesture });
-    conn.send({ type: "score", score: playerScore });
-  }
 };
 
+document.getElementById("fullscreenBtn").onclick = () => {
+  document.documentElement.requestFullscreen();
+};
+
+initCameraSelector();

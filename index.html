@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>AR Rock Paper Scissors (Web)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <h1>Rock Paper Scissors (Camera AR)</h1>
-<button id="fullscreenBtn">Enter Fullscreen AR</button>
 
 <div id="camera-ui">
   <label>Camera:</label>
@@ -22,6 +22,7 @@
 <div id="ui">
   <p>Detected: <span id="detected">-</span></p>
   <p>Countdown: <span id="countdown">-</span></p>
+  <p>Confidence: <span id="confidence">0%</span></p>
   <h2 id="result">-</h2>
 </div>
 
@@ -37,17 +38,11 @@
 </div>
 
 <button id="restartBtn">Restart Game</button>
-
-<div>
-  <input id="peerIdInput" placeholder="Friend ID">
-  <button onclick="connectToPeer(peerIdInput.value)">Connect</button>
-</div>
-
+<button id="fullscreenBtn">Fullscreen AR</button>
 
 <!-- MediaPipe -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
 <script src="script.js"></script>
 </body>
